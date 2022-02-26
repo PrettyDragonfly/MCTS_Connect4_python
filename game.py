@@ -8,6 +8,7 @@ class Game:
         self.board = Board()
         self.current_player = None
         self.advance_turn()
+        self.intelligent = False
 
     def play(self):
         self.current_player = int(input("Qui commence? (0 pour l'ordinateur, 1 pour l'humain)"))
@@ -19,6 +20,8 @@ class Game:
             print("C'est l'humain qui commence")
         self.board.affiche_jeu()
 
+        self.is_intelligent()
+
         while True:
             if self.current_player == 1:
                 column = self.get_move()
@@ -27,9 +30,22 @@ class Game:
                     print("Colonne invalide")
                     column = self.get_move()
             else:
-                print("L'ordinateur réfléchi")
-                node, column = MCTS(copy.deepcopy(self.board), '0', 10, last_node=node).get_move()
+                column = None
+                if self.intelligent:
+                    column = self.verif_intelligente()
+                    if column is None:
+                        print("Vérification intelligente finie. Pas de victoire possible sur ce coup.")
+                    else:
+                        print("Vérification intelligente finie. L'ordinateur doit jouer dans la colonne {}.".format(column))
+
+                if column is None:
+                    # La vérification intelligente n'a rien donnée, on applique le MCTS normal
+                    print("L'ordinateur réfléchi...")
+                    node, column = MCTS(copy.deepcopy(self.board), '0', 10, last_node=node).get_move()
+                    print("L'ordinateur choisi la colonne {}.".format(column))
+
                 self.board.jouer_coup('O', column)
+
 
             self.board.affiche_jeu()
             node = self.navigate_to_node_for_move(node, column, self.board)
@@ -62,3 +78,16 @@ class Game:
             if child.column == column:
                 return child
         return Node(board, node.player_piece)
+
+    def is_intelligent(self):
+        reponse = input("Voulez-vous que l'ordinateur soit plus intelligent? (détection de victoire possible) (O/N)").upper()
+        if reponse == 'O':
+            self.intelligent = True
+        else:
+            self.intelligent = False
+
+    def verif_intelligente(self):
+        # Vérifie pour chaque colonne si l'ajout d'un jeton donne une victoire ou pas
+        test_plateau = copy.deepcopy(self.board)
+        return test_plateau.check_coup_gagnant(self.current_player)
+

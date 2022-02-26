@@ -1,4 +1,5 @@
 import numpy as np
+import copy
 
 class Board():
     def __init__(self):
@@ -80,9 +81,9 @@ class Board():
         return False
 
     def diagonal_winner(self, row, column):
-        return self.__check_upper_right_diagonal(row, column) or self.__check_upper_left_diagonal(row, column)
+        return self.check_diago_haut_droite(row, column) or self.check_diago_haut_gauche(row, column)
 
-    def __check_upper_left_diagonal(self, row, column):
+    def check_diago_haut_gauche(self, row, column):
         tmp_row, tmp_col = row, column
         run = []
         while tmp_row < 5 and tmp_col < 6:
@@ -92,9 +93,9 @@ class Board():
             run.append(self.plateau[tmp_row][tmp_col])
             tmp_row -= 1
             tmp_col -= 1
-        return self.check_run(run)
+        return self.check_rangee(run)
 
-    def __check_upper_right_diagonal(self, row, column):
+    def check_diago_haut_droite(self, row, column):
         tmp_row, tmp_col = row, column
         run = []
         while tmp_col < 7 - 1 and tmp_row > 0:
@@ -105,9 +106,9 @@ class Board():
             run.append(self.plateau[tmp_row][tmp_col])
             tmp_row += 1
             tmp_col -= 1
-        return self.check_run(run)
+        return self.check_rangee(run)
 
-    def check_run(self, run):
+    def check_rangee(self, run):
         if len(run) < 4:
             return False
 
@@ -117,3 +118,38 @@ class Board():
             if run[i] == 'O' and run[i + 1] == 'O' and run[i + 2] == 'O' and run[i + 3] == 'O':
                 return True
         return False
+
+    def check_coup_gagnant(self, current_player):
+        # Pour chaque colonne on vérifie la victoire
+        tableau_test = copy.deepcopy(self)
+        if current_player == 0:
+            piece_test = 'O'
+        else:
+            piece_test = 'X'
+        for col in range(7):
+            # Si la colonne n'est pas remplie alors on teste la potentielle victoire
+            if tableau_test.jouer_coup(piece_test, col):
+                if tableau_test.is_winner():
+                    print("L'ordinateur gagne s'il joue en colonne [{}]".format(col))
+                    return col
+                else:
+                    # Recharge le tableau pour tester la colonne suivante:
+                    tableau_test = copy.deepcopy(self)
+
+        tableau_test = copy.deepcopy(self)
+        # Si la colonne n'est pas remplie alors on teste la potentielle défaite si l'adversaire le joue le coup suivant
+        if piece_test == 'X':
+            piece_test = 'O'
+        else:
+            piece_test = 'X'
+        for col in range(7):
+            if tableau_test.jouer_coup(piece_test, col):
+                if tableau_test.is_winner():
+                    print("Le joueur a une possibilité de gagner qu'il faut contrer en colonne [{}]".format(col))
+                    return col
+                else:
+                    # Recharge le tableau pour tester la colonne suivante:
+                    tableau_test = copy.deepcopy(self)
+
+        # Si aucun coup vainqueur ou perdant absolu alors on ne retourne rien
+        return None
