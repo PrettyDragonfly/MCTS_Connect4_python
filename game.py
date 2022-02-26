@@ -28,7 +28,7 @@ class Game:
                     column = self.get_move()
             else:
                 print("L'ordinateur réfléchi")
-                node, column = MCTS(copy.deepcopy(self.board), '0', 3, last_node=node).get_move()
+                node, column = MCTS(copy.deepcopy(self.board), '0', 10, last_node=node).get_move()
                 self.board.jouer_coup('O', column)
 
             self.board.affiche_jeu()

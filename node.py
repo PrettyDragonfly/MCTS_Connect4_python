@@ -15,7 +15,7 @@ class Node:
         best, best_child = 0, None
         c = sqrt(2)
         for child in self.children:
-            score = child.wins / child.visits + c*sqrt(2*log(self.visits) / child.visits)
+            score = child.wins / child.visits + c * sqrt(2*log(self.visits) / child.visits)
             if score > best:
                 best_child = child
                 best = score

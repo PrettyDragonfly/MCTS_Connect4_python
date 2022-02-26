@@ -14,6 +14,7 @@ class MCTS():
 
     def get_move(self):
         end_time = time.time() + self.timer
+        ite = 0
         while time.time() < end_time:
             node = self.root
             state = copy.deepcopy(self.original_state)
@@ -21,6 +22,11 @@ class MCTS():
             node = self.expand(node, state)
             state = self.rollout(state)
             self.backpropagate(node, state)
+            ite += 1
+        print("Nombre d'itérations: {}".format(ite))
+        while node.parent is not None:
+            node = node.parent
+        print('Estimation de la probabilité de victoire: %.2f%%' % (100 * node.wins / node.visits))
         return self.root, sorted(self.root.children, key=lambda c: c.wins/c.visits)[-1].column
 
     def select(self, node, state):
