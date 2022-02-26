@@ -1,5 +1,6 @@
 from math import sqrt, log
 import copy
+from numpy import inf
 
 class Node:
     def __init__(self, state, piece, column=None, parent=None):
@@ -12,10 +13,13 @@ class Node:
         self.visits = 0
 
     def uct_select_child(self):
-        best, best_child = 0, None
+        best, best_child = -inf, None
         c = sqrt(2)
         for child in self.children:
-            score = child.wins / child.visits + c * sqrt(2*log(self.visits) / child.visits)
+            if child.player_piece == 'O':
+                score = child.wins / child.visits + c * sqrt(2*log(self.visits) / child.visits)
+            else:
+                score = -(child.wins / child.visits) + c * sqrt(2 * log(self.visits) / child.visits)
             if score > best:
                 best_child = child
                 best = score
