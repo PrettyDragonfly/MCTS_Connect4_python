@@ -14,6 +14,9 @@ class MCTS():
         self.timer = timer
 
     def get_move(self):
+        best_ratio = -1
+        best_column = None
+        node = self.root
         end_time = time.time() + self.timer
         ite = 0
         while time.time() < end_time:
@@ -25,17 +28,26 @@ class MCTS():
             self.backpropagate(node, state)
             ite += 1
         print("Nombre d'itérations: {}".format(ite))
-        while node.parent is not None:
-            node = node.parent
-        print('Estimation de la probabilité de victoire: %.2f%%' % (100 * node.wins / node.visits))
-        best_score = -inf
-        best_child = None
-        for child in self.root.children:
-            score = child.wins/child.visits
-            if score > best_score:
-                best_score = score
-                best_child = child
-        return self.root, best_child.column
+        for i in iter(self.root.children):
+            if (i.wins / i.visits) * 100 > best_ratio:
+                best_ratio = (i.wins / i.visits) * 100
+                best_column = i.column
+        # while node.parent is not None:
+        #     node = node.parent
+        # print('Estimation de la probabilité de victoire: %.2f%%' % (100 * node.wins / node.visits))
+        # best_score = -inf
+        # best_child = None
+        # for child in self.root.children:
+        #     score = child.wins/child.visits
+        #     print("score colonne {}: {}".format(child.column, score))
+        #     if score > best_score:
+        #         best_score = score
+        #         best_child = child
+
+        if best_column is not None:
+            print("La colonne [{}] a le meilleur ratio: [{:.2f}%]".format(best_column, best_ratio))
+
+        return node, best_column
         # return self.root, sorted(self.root.children, key=lambda c: c.wins/c.visits)[-1].column
 
     def select(self, node, state):

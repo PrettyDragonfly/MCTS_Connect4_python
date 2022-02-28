@@ -3,6 +3,8 @@ from node import Node
 from mcts import MCTS
 import copy
 
+TIME = 10
+
 class Game:
     def __init__(self):
         self.board = Board()
@@ -41,7 +43,7 @@ class Game:
                 if column is None:
                     # La vérification intelligente n'a rien donnée, on applique le MCTS normal
                     print("L'ordinateur réfléchi...")
-                    node, column = MCTS(copy.deepcopy(self.board), '0', 20, last_node=node).get_move()
+                    node, column = MCTS(copy.deepcopy(self.board), '0', TIME, last_node=node).get_move()
                     print("L'ordinateur choisi la colonne {}.".format(column+1))
 
                 self.board.jouer_coup('O', column)
