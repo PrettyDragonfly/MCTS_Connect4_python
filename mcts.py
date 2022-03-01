@@ -32,7 +32,7 @@ class MCTS():
                 best_ratio = (i.wins / i.visits) * 100
                 best_column = i.column
         if best_column is not None:
-            print("La colonne [{}] a le meilleur ratio: [{:.2f}%]".format(best_column, best_ratio))
+            print("La colonne [{}] a le meilleur ratio: [{:.2f}%]".format(best_column+1, best_ratio))
 
         return node, best_column
 

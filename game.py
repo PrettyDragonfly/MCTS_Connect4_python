@@ -3,7 +3,7 @@ from node import Node
 from mcts import MCTS
 import copy
 
-TIME = 30
+TIME = 10
 
 class Game:
     def __init__(self):
@@ -38,7 +38,7 @@ class Game:
                     if column is None:
                         print("Vérification intelligente finie. Pas de victoire possible sur ce coup.")
                     else:
-                        print("Vérification intelligente finie. L'ordinateur doit jouer dans la colonne {}.".format(column))
+                        print("Vérification intelligente finie. L'ordinateur doit jouer dans la colonne {}.".format(column+1))
 
                 if column is None:
                     # La vérification intelligente n'a rien donnée, on applique le MCTS normal
@@ -82,7 +82,7 @@ class Game:
         return Node(board, node.player_piece)
 
     def is_intelligent(self):
-        reponse = input("Voulez-vous que l'ordinateur soit plus intelligent? (détection de victoire possible) (O/N)").upper()
+        reponse = input("Voulez-vous que l'ordinateur soit plus intelligent? (détection de victoire possible) (O/N) (question 3)").upper()
         if reponse == 'O':
             self.intelligent = True
         else:

@@ -130,7 +130,7 @@ class Board():
             # Si la colonne n'est pas remplie alors on teste la potentielle victoire
             if tableau_test.jouer_coup(piece_test, col):
                 if tableau_test.is_winner():
-                    print("L'ordinateur gagne s'il joue en colonne [{}]".format(col))
+                    print("L'ordinateur gagne s'il joue en colonne [{}]".format(col+1))
                     return col
                 else:
                     # Recharge le tableau pour tester la colonne suivante:
@@ -145,7 +145,7 @@ class Board():
         for col in range(7):
             if tableau_test.jouer_coup(piece_test, col):
                 if tableau_test.is_winner():
-                    print("Le joueur a une possibilité de gagner qu'il faut contrer en colonne [{}]".format(col))
+                    print("Le joueur a une possibilité de gagner qu'il faut contrer en colonne [{}]".format(col+1))
                     return col
                 else:
                     # Recharge le tableau pour tester la colonne suivante:
