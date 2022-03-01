@@ -3,7 +3,7 @@ from node import Node
 from mcts import MCTS
 import copy
 
-TIME = 10
+TIME = 30
 
 class Game:
     def __init__(self):
